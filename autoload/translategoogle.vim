@@ -19,8 +19,8 @@ augroup END
 let s:url = 'https://translate.google.com/'
 
 let s:params = {
-            \   'hl': g:translategoogle_default_hl,
             \   'sl': g:translategoogle_default_sl,
+            \   'tl': g:translategoogle_default_tl,
             \   'ie': g:translategoogle_default_ie,
             \   'oe': g:translategoogle_default_oe,
             \ }
@@ -31,8 +31,8 @@ let s:bufname_after = s:bufname_pre . '- after'
 let s:bufname_retrans = s:bufname_pre . '- retrans'
 
 let s:parser = s:OptionParser.new()
-call s:parser.on('--hl', 'hl')
 call s:parser.on('--sl', 'sl')
+call s:parser.on('--tl', 'tl')
 call s:parser.on('--ie', 'ie')
 call s:parser.on('--oe', 'oe')
 
@@ -78,10 +78,9 @@ function! s:define_cmd(idx)
 endfunction
 
 function! s:toggle_language(idx)
-    let hl = s:translategoogle.params[a:idx].hl
-    let s:translategoogle.params[a:idx].hl = s:translategoogle.params[a:idx].sl
-    let s:translategoogle.params[a:idx].sl = hl
-    let g:debug_params = s:translategoogle.params[a:idx]
+    let tl = s:translategoogle.params[a:idx].tl
+    let s:translategoogle.params[a:idx].tl = s:translategoogle.params[a:idx].sl
+    let s:translategoogle.params[a:idx].sl = tl
 
     let bufnr = get(s:translategoogle.buffers[a:idx].before.list(), 0)
     let text = join(getbufline(bufnr, 1))
@@ -100,7 +99,7 @@ function s:enable_retranslate(idx)
         call s:define_cmd(a:idx)
 
         let retrans = translategoogle#buffer(get(s:translategoogle.buffers[a:idx].after.list(), 0),
-                    \   {'hl': s:translategoogle.params[a:idx].sl, 'sl': s:translategoogle.params[a:idx].hl}
+                    \   {'sl': s:translategoogle.params[a:idx].tl, 'tl': s:translategoogle.params[a:idx].sl}
                     \ )
         call s:rewrite_buffer(retrans)
 
@@ -131,8 +130,8 @@ function! s:create_buffers()
                 \ )
     call add(s:translategoogle.params,
                 \   {
-                \       'hl': g:translategoogle_default_hl,
                 \       'sl': g:translategoogle_default_sl,
+                \       'tl': g:translategoogle_default_tl,
                 \       'ie': g:translategoogle_default_ie,
                 \       'oe': g:translategoogle_default_oe,
                 \   }
@@ -183,14 +182,14 @@ endfunction
 
 function! s:update_buffers(idx)
     let after = translategoogle#buffer(get(s:translategoogle.buffers[a:idx].before.list(), 0),
-                \   {'hl': s:translategoogle.params[a:idx].hl, 'sl': s:translategoogle.params[a:idx].sl}
+                \   {'sl': s:translategoogle.params[a:idx].sl, 'tl': s:translategoogle.params[a:idx].tl}
                 \ )
     call s:translategoogle.buffers[a:idx].after.move()
     call s:rewrite_buffer(after)
 
     if s:translategoogle.retranslate[a:idx]
         let retrans = translategoogle#buffer(get(s:translategoogle.buffers[a:idx].after.list(), 0),
-                    \   {'hl': s:translategoogle.params[a:idx].sl, 'sl': s:translategoogle.params[a:idx].hl}
+                    \   {'sl': s:translategoogle.params[a:idx].tl, 'tl': s:translategoogle.params[a:idx].sl}
                     \ )
         call s:translategoogle.buffers[a:idx].retrans.move()
         call s:rewrite_buffer(retrans)
@@ -208,8 +207,8 @@ endfunction
 
 function! s:get_translated_text(text, ...)
     let getdata = {
-                \     'hl': get(a:1, 'hl', s:params.hl),
                 \     'sl': get(a:1, 'sl', s:params.sl),
+                \     'tl': get(a:1, 'tl', s:params.tl),
                 \     'ie': get(a:1, 'il', s:params.ie),
                 \     'oe': get(a:1, 'ol', s:params.oe),
                 \     'text': a:text
