@@ -105,7 +105,7 @@ function s:enable_retranslate(idx)
 
         call s:translategoogle.buffers[a:idx].before.move()
     else
-        s:Message.warn('already enabled')
+        call s:Message.warn('already enabled')
     endif
 endfunction
 
@@ -115,7 +115,7 @@ function s:disable_retranslate(idx)
         call s:translategoogle.buffers[a:idx].retrans.close()
         call s:translategoogle.buffers[a:idx].before.move()
     else
-        s:Message.warn('already disabled')
+        call s:Message.warn('already disabled')
     endif
 endfunction
 
@@ -218,7 +218,7 @@ function! s:get_translated_text(text, ...)
     let response = s:HTTP.get(s:url, getdata, headdata)
 
     if response.status != 200
-        s:Message.error(response.statusText)
+        call s:Message.error(response.statusText)
         return ''
     endif
 
