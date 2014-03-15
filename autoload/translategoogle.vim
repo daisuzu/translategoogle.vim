@@ -55,7 +55,7 @@ function! translategoogle#command(args)
         return ''
     endif
 
-    let text = iconv(join(get(args, '__unknown_args__', []), "\n"), &encoding, 'utf-8')
+    let text = iconv(join(get(args, '__unknown_args__', []), " "), &encoding, 'utf-8')
 
     return join(s:get_translated_text(text, args), "\n")
 endfunction
@@ -236,7 +236,25 @@ function! s:get_translated_text(text, ...)
 
     let html = s:HTML.parse(response.content)
     let result = html.find({'id': 'result_box'}).childNodes()
-    let text = map(copy(result), 'v:val.child[0]')
+
+    let text = []
+    let tmp_string = ""
+    for childs in result
+        for child in childs.child
+            if type(child) == 4
+                call add(text, tmp_string)
+                let tmp_string = ""
+            else
+                let tmp_string.= child
+            endif
+            unlet child
+        endfor
+    endfor
+
+    if tmp_string != ""
+        call add(text, tmp_string)
+    endif
+
     return text
 endfunction
 " }}}
