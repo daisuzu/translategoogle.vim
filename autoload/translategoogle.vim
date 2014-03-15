@@ -89,7 +89,7 @@ function! s:toggle_language(idx)
     endif
 endfunction
 
-function s:enable_retranslate(idx)
+function! s:enable_retranslate(idx)
     if !s:translategoogle.retranslate[a:idx]
         let s:translategoogle.retranslate[a:idx] = 1
 
@@ -109,7 +109,7 @@ function s:enable_retranslate(idx)
     endif
 endfunction
 
-function s:disable_retranslate(idx)
+function! s:disable_retranslate(idx)
     if s:translategoogle.retranslate[a:idx]
         let s:translategoogle.retranslate[a:idx] = 0
         call s:translategoogle.buffers[a:idx].retrans.close()
