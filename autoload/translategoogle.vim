@@ -78,11 +78,15 @@ endfunction
 " }}}
 
 " internal functions {{{
-function! s:define_cmd(idx)
+function! s:define_cmd_map(idx)
     execute 'command! -buffer TranslateGoogleToggle call s:toggle_language(' . a:idx . ')'
     execute 'command! -buffer TranslateGoogleClose call s:close_buffers(' . a:idx . ')'
     execute 'command! -buffer TranslateGoogleEnableRetranslate call s:enable_retranslate(' . a:idx . ')'
     execute 'command! -buffer TranslateGoogleDisableRetranslate call s:disable_retranslate(' . a:idx . ')'
+
+    if g:translategoogle_mapping_close != ''
+        execute 'nnoremap <buffer> ' . g:translategoogle_mapping_close . ' :TranslateGoogleClose<CR>'
+    endif
 endfunction
 
 function! s:toggle_language(idx)
@@ -104,7 +108,7 @@ function! s:enable_retranslate(idx)
         call s:translategoogle.buffers[a:idx].after.move()
         call s:translategoogle.buffers[a:idx].retrans.open(s:bufname_retrans,
                     \ {'opener': g:translategoogle_default_opener_retrans})
-        call s:define_cmd(a:idx)
+        call s:define_cmd_map(a:idx)
 
         let retrans = translategoogle#buffer(get(s:translategoogle.buffers[a:idx].after.list(), 0),
                     \   {'sl': s:translategoogle.params[a:idx].tl, 'tl': s:translategoogle.params[a:idx].sl}
@@ -163,18 +167,18 @@ function! s:open_buffers(...)
     call s:translategoogle.buffers[idx].before.open(s:bufname_before,
                 \ {'opener': g:translategoogle_default_opener_before})
     setlocal buftype=nofile
-    call s:define_cmd(idx)
+    call s:define_cmd_map(idx)
     autocmd! TranlateGoogle * <buffer>
     execute 'autocmd TranlateGoogle InsertLeave,TextChanged <buffer> call s:update_buffers(' . idx . ')'
 
     call s:translategoogle.buffers[idx].after.open(s:bufname_after,
                 \ {'opener': g:translategoogle_default_opener_after})
-    call s:define_cmd(idx)
+    call s:define_cmd_map(idx)
 
     if s:translategoogle.retranslate[idx]
         call s:translategoogle.buffers[idx].retrans.open(s:bufname_retrans,
                     \ {'opener': g:translategoogle_default_opener_retrans})
-        call s:define_cmd(idx)
+        call s:define_cmd_map(idx)
     endif
 
     call s:translategoogle.buffers[idx].before.move()

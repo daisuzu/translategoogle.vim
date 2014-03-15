@@ -25,6 +25,8 @@ let g:translategoogle_default_opener_retrans =
             \ get(g:, 'translategoogle_default_opener_retrans', 'rightbelow vsplit')
 let g:translategoogle_enable_retranslate =
             \ get(g:, 'translategoogle_enable_retranslate', 0)
+let g:translategoogle_mapping_close =
+            \ get(g:, 'translategoogle_mapping_close', 'q')
 
 command! TranslateGoogle call translategoogle#open()
 command! -nargs=* -complete=customlist,translategoogle#complete_command
