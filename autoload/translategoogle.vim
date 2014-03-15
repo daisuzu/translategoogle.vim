@@ -30,9 +30,14 @@ let s:bufname_before = s:bufname_pre . '- before'
 let s:bufname_after = s:bufname_pre . '- after'
 let s:bufname_retrans = s:bufname_pre . '- retrans'
 
+function! s:complete_language(optlead, cmdline, cursorpos)
+    return filter(copy(g:translategoogle_languages),
+                \ 'a:optlead == "" ? 1 : (v:val =~# a:optlead)')
+endfunction
+
 let s:parser = s:OptionParser.new()
-call s:parser.on('--sl=VALUE', 'source language')
-call s:parser.on('--tl=VALUE', 'target language')
+call s:parser.on('--sl=VALUE', 'source language', {'completion': function('s:complete_language')})
+call s:parser.on('--tl=VALUE', 'target language', {'completion': function('s:complete_language')})
 call s:parser.on('--ie=VALUE', 'input encoding')
 call s:parser.on('--oe=VALUE', 'outout encoding')
 

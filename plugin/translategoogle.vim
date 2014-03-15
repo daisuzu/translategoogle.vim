@@ -9,6 +9,8 @@ let g:loaded_translategoogle = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+let g:translategoogle_languages =
+            \ get(g:, 'translategoogle_languages', ['ja', 'en'])
 let g:translategoogle_default_sl =
             \ get(g:, 'translategoogle_default_sl', 'en')
 let g:translategoogle_default_tl =
