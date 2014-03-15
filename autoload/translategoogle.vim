@@ -41,6 +41,7 @@ let s:translategoogle = {
             \   'buffers': [],
             \   'params': [],
             \   'retranslate': [],
+            \   'auto_update': [],
             \ }
 " }}}
 
@@ -83,6 +84,8 @@ function! s:define_cmd_map(idx)
     execute 'command! -buffer TranslateGoogleClose call s:close_buffers(' . a:idx . ')'
     execute 'command! -buffer TranslateGoogleEnableRetranslate call s:enable_retranslate(' . a:idx . ')'
     execute 'command! -buffer TranslateGoogleDisableRetranslate call s:disable_retranslate(' . a:idx . ')'
+    execute 'command! -buffer TranslateGoogleEnableAutoUpdate let s:translategoogle.auto_update[' . a:idx . '] = 1'
+    execute 'command! -buffer TranslateGoogleDisableAutoUpdate let s:translategoogle.auto_update[' . a:idx . '] = 0'
 
     if g:translategoogle_mapping_close != ''
         execute 'nnoremap <buffer> ' . g:translategoogle_mapping_close . ' :TranslateGoogleClose<CR>'
@@ -151,6 +154,9 @@ function! s:create_buffers()
     call add(s:translategoogle.retranslate,
                 \   g:translategoogle_enable_retranslate
                 \ )
+    call add(s:translategoogle.auto_update,
+                \   1
+                \ )
 endfunction
 
 function! s:open_buffers(...)
@@ -193,6 +199,10 @@ function! s:close_buffers(idx)
 endfunction
 
 function! s:update_buffers(idx)
+    if !s:translategoogle.auto_update[a:idx]
+        return
+    endif
+
     let after = translategoogle#buffer(get(s:translategoogle.buffers[a:idx].before.list(), 0),
                 \   {'sl': s:translategoogle.params[a:idx].sl, 'tl': s:translategoogle.params[a:idx].tl}
                 \ )
