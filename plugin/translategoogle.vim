@@ -27,7 +27,8 @@ let g:translategoogle_enable_retranslate =
             \ get(g:, 'translategoogle_enable_retranslate', 0)
 
 command! TranslateGoogle call translategoogle#open()
-command! -nargs=* TranslateGoogleCmd echo translategoogle#command(<q-args>)
+command! -nargs=* -complete=customlist,translategoogle#complete_command
+            \ TranslateGoogleCmd echo translategoogle#command(<q-args>)
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

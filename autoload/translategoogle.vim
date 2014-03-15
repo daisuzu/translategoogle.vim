@@ -5,7 +5,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " difinitions {{{
-let s:V = vital#of('translategoogle.vim')
+let s:V = vital#of('translategoogle')
 let s:BufferManager = s:V.import('Vim.BufferManager')
 let s:HTTP = s:V.import('Web.HTTP')
 let s:HTML = s:V.import('Web.HTML')
@@ -31,10 +31,10 @@ let s:bufname_after = s:bufname_pre . '- after'
 let s:bufname_retrans = s:bufname_pre . '- retrans'
 
 let s:parser = s:OptionParser.new()
-call s:parser.on('--sl', 'sl')
-call s:parser.on('--tl', 'tl')
-call s:parser.on('--ie', 'ie')
-call s:parser.on('--oe', 'oe')
+call s:parser.on('--sl=VALUE', 'source language')
+call s:parser.on('--tl=VALUE', 'target language')
+call s:parser.on('--ie=VALUE', 'input encoding')
+call s:parser.on('--oe=VALUE', 'outout encoding')
 
 let s:translategoogle = {
             \   'index': -1,
@@ -45,8 +45,16 @@ let s:translategoogle = {
 " }}}
 
 " interfaces {{{
+function! translategoogle#complete_command(arglead, cmdline, cursorpos)
+    return s:parser.complete(a:arglead, a:cmdline, a:cursorpos)
+endfunction
+
 function! translategoogle#command(args)
     let args = s:parser.parse(a:args)
+    if exists('args.help')
+        return ''
+    endif
+
     let text = iconv(join(get(args, '__unknown_args__', []), "\n"), &encoding, 'utf-8')
 
     return join(s:get_translated_text(text, args), "\n")
