@@ -56,7 +56,13 @@ function! translategoogle#complete_command(arglead, cmdline, cursorpos)
 endfunction
 
 function! translategoogle#command(args)
-    let args = s:parser.parse(a:args)
+    try
+        let args = s:parser.parse(a:args)
+    catch /vital: OptionParser: Must specify value for option:/
+        call s:Message.error(v:exception)
+        return s:parser.help()
+    endtry
+
     if exists('args.help')
         return ''
     endif
@@ -242,11 +248,16 @@ function! s:get_translated_text(text, ...)
                 \ }
     let headdata = {'User-Agent': 'w3m/0.5.3'}
 
-    let response = s:HTTP.get(s:url, getdata, headdata)
+    try
+        let response = s:HTTP.get(s:url, getdata, headdata)
+    catch /.*/
+        call s:Message.error(v:exception)
+        return []
+    endtry
 
     if response.status != 200
         call s:Message.error(response.statusText)
-        return ''
+        return []
     endif
 
     let html = s:HTML.parse(response.content)
