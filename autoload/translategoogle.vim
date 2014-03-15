@@ -245,7 +245,7 @@ function! s:get_translated_text(text, ...)
                 call add(text, tmp_string)
                 let tmp_string = ""
             else
-                let tmp_string.= child
+                let tmp_string.= substitute(child, '&quot', '"', 'g')
             endif
             unlet child
         endfor
