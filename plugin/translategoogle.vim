@@ -33,6 +33,8 @@ let g:translategoogle_mapping_close =
 command! TranslateGoogle call translategoogle#open()
 command! -nargs=* -complete=customlist,translategoogle#complete_command
             \ TranslateGoogleCmd echo translategoogle#command(<q-args>)
+command! -nargs=*
+            \ TranslateGoogleCmdReverse echo translategoogle#command_reverse(<q-args>)
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

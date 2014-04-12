@@ -68,8 +68,19 @@ function! translategoogle#command(args)
     endif
 
     let text = iconv(join(get(args, '__unknown_args__', []), " "), &encoding, 'utf-8')
+    if !len(text)
+        return ''
+    endif
 
     return join(s:get_translated_text(text, args), "\n")
+endfunction
+
+function! translategoogle#command_reverse(text)
+    return translategoogle#command(join([
+                \   '--sl=' . g:translategoogle_default_tl,
+                \   '--tl=' . g:translategoogle_default_sl,
+                \   a:text
+                \ ], ' '))
 endfunction
 
 function! translategoogle#buffer(bufnr, ...)
@@ -240,10 +251,10 @@ endfunction
 
 function! s:get_translated_text(text, ...)
     let getdata = {
-                \     'sl': get(a:1, 'sl', s:params.sl),
-                \     'tl': get(a:1, 'tl', s:params.tl),
-                \     'ie': get(a:1, 'il', s:params.ie),
-                \     'oe': get(a:1, 'ol', s:params.oe),
+                \     'sl': get(a:1, 'sl', g:translategoogle_default_sl),
+                \     'tl': get(a:1, 'tl', g:translategoogle_default_tl),
+                \     'ie': get(a:1, 'il', g:translategoogle_default_ie),
+                \     'oe': get(a:1, 'ol', g:translategoogle_default_oe),
                 \     'text': a:text
                 \ }
     let headdata = {'User-Agent': 'w3m/0.5.3'}
