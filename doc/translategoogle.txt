@@ -10,8 +10,7 @@ INTRODUCTION			|translategoogle-introduction|
 USAGE				|translategoogle-usage|
 INTERFACE			|translategoogle-interface|
   VARIABLES			  |translategoogle-variables|
-TODO				|translategoogle-todo|
-CHANGELOG			|translategoogle-changelog|
+  COMMANDS			  |translategoogle-commands|
 
 
 ==============================================================================
@@ -30,7 +29,7 @@ USAGE						*translategoogle-usage*
 
 	To translate text of command arguments.
 >
-	:TranslateGoogleCmd WORD
+	:TranslateGoogleCmd TEXT
 <
 
 
@@ -39,6 +38,12 @@ INTERFACE					*translategoogle-interface*
 
 ------------------------------------------------------------------------------
 VARIABLES					*translategoogle-variables*
+
+g:translategoogle_languages			*g:translategoogle_languages*
+	List of languages used in the completion in |TranslateGoogleCmd|.
+
+	default value:  ["ja", "en"]
+
 
 g:translategoogle_default_sl			*g:translategoogle_default_sl*
 	Source language of the translation.
@@ -50,6 +55,18 @@ g:translategoogle_default_tl			*g:translategoogle_default_tl*
 	Target language of the translation.
 
 	default value:  "ja"
+
+
+g:translategoogle_default_ie			*g:translategoogle_default_ie*
+	Encoding of the input.
+
+	default value:  "UTF-8"
+
+
+g:translategoogle_default_oe			*g:translategoogle_default_oe*
+	Encoding of the output.
+
+	default value:  "UTF-8"
 
 
 				*g:translategoogle_default_opener_before*
@@ -75,7 +92,7 @@ g:translategoogle_default_opener_retrans
 
 				*g:translategoogle_enable_retranslate*
 g:translategoogle_enable_retranslate
-	Enable retranslation if set to 1.
+	Enables retranslation if set to 1.
 
 	default value:  0
 
@@ -85,6 +102,38 @@ g:translategoogle_mapping_close
 	Key mapping for closing the all of TranslateGoogle buffer.
 
 	default value:  'q'
+
+
+------------------------------------------------------------------------------
+COMMANDS					*translategoogle-commands*
+
+:TranslateGoogle					*:TranslateGoogle*
+	Open the buffer for translate.
+	This buffer has the following commands.
+
+	:TranslateGoogleToggle
+		Toggle between |g:translategoogle_default_sl| and
+		|g:translategoogle_default_tl| in this buffer.
+	:TranslateGoogleClose
+		Close buffers opend with |TranslateGoogle|.
+	:TranslateGoogleEnableRetranslate
+		Enables retranslation.
+	:TranslateGoogleDisableRetranslate
+		Disables retranslation.
+	:TranslateGoogleEnableAutoUpdate
+		Enables translation process by |InsertLeave| or |TextChanged|.
+	:TranslateGoogleDisableAutoUpdate
+		Disables translation process by |InsertLeave| or |TextChanged|.
+
+
+:TranslateGoogleCmd [{othe pions} ...] {text}		*:TranslateGoogleCmd*
+	Translate {text}, and echoes translated {text}.
+	{options} are the following options for translation.
+
+	--sl=VALUE : Overwrite |g:translategoogle_default_sl|.
+	--tl=VALUE : Overwrite |g:translategoogle_default_tl|.
+	--ie=VALUE : Overwrite |g:translategoogle_default_ie|.
+	--oe=VALUE : Overwrite |g:translategoogle_default_oe|.
 
 
 ==============================================================================
